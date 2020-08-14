@@ -17,19 +17,20 @@ namespace dotgo.io
             N = n;
         }
 
-        public ReaderReadReturn Read(byte[] p)
+        public (int n, error err) Read(byte[] p)
         {
-            if (N <= 0)
+            var l = this;
+            if (l.N <= 0)
             {
-                return new ReaderReadReturn() { n = 0, err = io.EOF };
+                return (0, io.EOF );
             }
-            if (dotgo.len(p) > N)
+            if (dotgo.len(p) > l.N)
             {
                 //p = new slice<byte>(p, 0, (int)N);
             }
-            var readResult = R.Read(p);
-            N = readResult.n;
-            return new ReaderReadReturn() { n = (int)N, err = error.Nil };
+            (int n, error err) = l.R.Read(p);
+            N = n;
+            return ( (int)N, error.Nil);
         }
     }
 }

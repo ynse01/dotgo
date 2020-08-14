@@ -1,14 +1,6 @@
 ﻿
 namespace dotgo.io
 {
-    public struct ReaderReadReturn
-    {
-        public int n;
-        public error err;
-
-        public static ReaderReadReturn Nil = new ReaderReadReturn() { n = 0, err = error.Nil };
-    }
-
     /// <summary>
     ///  Reader is the interface that wraps the basic Read method.
     ///  Read reads up to len(p) bytes into p.It returns the number of bytes read(0 <= n <= len(p)) and
@@ -27,6 +19,6 @@ namespace dotgo.io
     /// </summary>
     public interface Reader
     {
-        ReaderReadReturn Read(byte[] p);
+        (int n, error err) Read(byte[] p);
     }
 }

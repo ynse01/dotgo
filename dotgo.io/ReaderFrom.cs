@@ -9,6 +9,6 @@ namespace dotgo.io
     /// </summary>
     public interface ReaderFrom
     {
-        ReaderReadReturn ReadFrom(Reader r);
+        (int n, error err) ReadFrom(Reader r);
     }
 }

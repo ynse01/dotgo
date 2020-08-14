@@ -11,9 +11,9 @@ namespace dotgo.io
         /// or the write end is closed.
         /// If the write end is closed with an error, that error is returned as err; otherwise err is EOF. 
         /// </summary>
-        public ReaderReadReturn Read(byte[] p)
+        public (int n, error err) Read(byte[] p)
         {
-            return new ReaderReadReturn();
+            return (0, error.Nil);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace dotgo.io
         /// </summary>
         public error CloseWithError(error err)
         {
-            return default(error);
+            return error.Nil;
         }
     }
 }

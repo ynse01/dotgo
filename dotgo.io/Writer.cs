@@ -1,12 +1,6 @@
 ﻿
 namespace dotgo.io
 {
-    public struct WriterWriteReturn
-    {
-        public int n;
-        public error err;
-    }
-
     /// <summary>
     ///  Writer is the interface that wraps the basic Write method.
     ///  Write writes len(p) bytes from p to the underlying data stream.
@@ -16,6 +10,6 @@ namespace dotgo.io
     /// </summary>
     public interface Writer
     {
-        WriterWriteReturn Write(byte[] p);
+        (int n, error err) Write(byte[] p);
     }
 }

@@ -1,12 +1,6 @@
 ﻿
 namespace dotgo.io
 {
-    public struct ByteReaderReadByteReturn
-    {
-        byte b;
-        error err;
-    }
-
     /// <summary>
     ///  ByteReader is the interface that wraps the ReadByte method.
     ///  ReadByte reads and returns the next byte from the input or any error encountered.
@@ -16,6 +10,6 @@ namespace dotgo.io
     /// </summary>
     public interface ByteReader
     {
-        ByteReaderReadByteReturn ReadByte();
+        (byte b, error err) ReadByte();
     }
 }

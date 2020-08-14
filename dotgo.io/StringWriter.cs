@@ -6,6 +6,6 @@ namespace dotgo.io
     /// </summary>
     public interface StringWriter
     {
-        WriterWriteReturn WriteString(string s);
+        (int n, error err) WriteString(string s);
     }
 }

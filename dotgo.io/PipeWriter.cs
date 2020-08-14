@@ -11,9 +11,9 @@ namespace dotgo.io
         /// have consumed all the data or the read end is closed.
         /// If the read end is closed with an error, that err is returned as err; otherwise err is ErrClosedPipe. 
         /// </summary>
-        public WriterWriteReturn Write(byte[] p)
+        public (int n, error err) Write(byte[] p)
         {
-            return new WriterWriteReturn();
+            return (0, error.Nil);
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace dotgo.io
         /// </summary>
         public error CloseWithError(error err)
         {
-            return default(error);
+            return error.Nil;
         }
     }
 }

@@ -123,9 +123,9 @@ namespace dotgo.io
         /// ReadAtLeast returns ErrShortBuffer. On return, n >= min if and only if err == nil.
         /// If r returns an error having read at least min bytes, the error is dropped. 
         /// </summary>
-        public static ReaderReadReturn ReadAtLeast(Reader r, byte[] buf, int min)
+        public static (int n, error err) ReadAtLeast(Reader r, byte[] buf, int min)
         {
-            return new ReaderReadReturn();
+            return (0, error.Nil);
         }
 
         /// <summary>
@@ -135,9 +135,9 @@ namespace dotgo.io
         /// On return, n == len(buf) if and only if err == nil. If r returns an error having read at least
         /// len(buf) bytes, the error is dropped. 
         /// </summary>
-        public static ReaderReadReturn ReadFull(Reader r, byte[] buf)
+        public static (int n, error err) ReadFull(Reader r, byte[] buf)
         {
-            return new ReaderReadReturn();
+            return (0, error.Nil);
         }
 
         /// <summary>
@@ -145,9 +145,9 @@ namespace dotgo.io
         /// If w implements StringWriter, its WriteString method is invoked directly.
         /// Otherwise, w.Write is called exactly once. 
         /// </summary>
-        public static WriterWriteReturn WriteString(Writer w, string s)
+        public static (int n, error err) WriteString(Writer w, string s)
         {
-            return new WriterWriteReturn();
+            return (0, error.Nil);
         }
 
         /// <summary>

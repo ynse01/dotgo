@@ -9,6 +9,6 @@ namespace dotgo.io
     /// </summary>
     public interface WriterTo
     {
-        WriterWriteReturn WriteTo(Writer w);
+        (int n, error err) WriteTo(Writer w);
     }
 }

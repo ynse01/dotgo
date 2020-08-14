@@ -13,6 +13,6 @@ namespace dotgo.io
     /// </summary>
     public interface WriterAt
     {
-        WriterWriteReturn WriteAt(byte[] p, long off);
+        (int n, error err) WriteAt(byte[] p, long off);
     }
 }

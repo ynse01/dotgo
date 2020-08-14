@@ -12,18 +12,18 @@ namespace dotgo.io
             this.w = w;
         }
 
-        public ReaderReadReturn Read(byte[] p)
+        public (int n, error err) Read(byte[] p)
         {
-            var readResult = r.Read(p);
-            if (readResult.n > 0)
+            (int n, error err) = r.Read(p);
+            if (n > 0)
             {
-                var writeResult = w.Write(p);
-                if (writeResult.err != error.Nil)
+                (int wn, error werr) = w.Write(p);
+                if (werr != error.Nil)
                 {
-                    return new ReaderReadReturn() { n = readResult.n, err = writeResult.err };
+                    return (wn, werr);
                 }
             }
-            return ReaderReadReturn.Nil;
+            return (n, err);
         }
     }
 }
