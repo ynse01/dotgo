@@ -70,5 +70,10 @@ namespace dotgo.io
         {
             return new SectionReader(r, off, n);
         }
+
+        public static Writer MultiWriter(params Writer[] writers)
+        {
+            return writers[0];
+        }
     }
 }
