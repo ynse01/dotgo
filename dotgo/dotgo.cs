@@ -12,12 +12,19 @@ namespace dotgo
 
         public static int cap(object v)
         {
-            return 0;
+            int cap = 0;
+            Type target = v.GetType();
+            var capMethod = target.GetMethod("cap");
+            if (capMethod != null)
+            {
+                cap = (int)capMethod.Invoke(v, null);
+            }
+            return cap;
         }
 
         public static void close<T>(chan<T> c)
         {
-
+            //TODO: Implement
         }
 
         public static complex64 Complex(float r, float i) {
@@ -36,7 +43,7 @@ namespace dotgo
 
         public static void delete<T, U>(map<T, U> m, T key)
         {
-
+            m.delete(key);
         }
 
         public static float imag(complex64 c)
@@ -51,22 +58,31 @@ namespace dotgo
 
         public static int len(object v)
         {
-            return 0;
+            int len = 0;
+            Type target = v.GetType();
+            var lenMethod = target.GetMethod("len");
+            if (lenMethod != null)
+            {
+                len = (int)lenMethod.Invoke(v, null);
+            }
+            return len;
         }
 
         public static T make<T>(params int[] size)
         {
+            //TODO: Implement
             return default(T);
         }
 
         public static object make(Type t, params int[] size)
         {
+            //TODO: Implement
             return null;
         }
 
         public static void panic()
         {
-
+            //TODO: Implement
         }
 
         public static void print(params object[] args)
@@ -95,7 +111,7 @@ namespace dotgo
 
         public static void recover()
         {
-
+            //TODO: Implement
         }
     }
 }
