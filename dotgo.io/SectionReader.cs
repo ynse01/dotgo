@@ -10,26 +10,54 @@ namespace dotgo.io
         private static error errOffset = errors.New("Seek: invalid offset");
 
         private ReaderAt reader;
-        private long offset;
-        private long size;
-        private long pos;
+        private long bas;
+        private long off;
+        private long limit;
 
         public SectionReader(ReaderAt r, long off, long n)
         {
             reader = r;
-            offset = off;
-            size = n;
-            pos = offset;
+            this.off = off;
+            bas = off;
+            limit = off + n;
         }
 
         public ReaderReadReturn Read(byte[] p)
         {
-            return reader.ReadAt(p, offset);
+            if (off >= limit)
+            {
+                return new ReaderReadReturn() { n = 0, err = io.EOF };
+            }
+            var max = limit - off;
+            if (dotgo.len(p) > max)
+            {
+                //p = new slice<byte>(p, 0, (int)max);
+            }
+            var readResult = reader.ReadAt(p, off);
+            off += readResult.n;
+            return readResult;
         }
 
         public ReaderReadReturn ReadAt(byte[] p, long off)
         {
-            return reader.ReadAt(p, offset + off);
+            if (off < 0 || off >= limit - bas)
+            {
+                return new ReaderReadReturn() { n = 0, err = io.EOF };
+            }
+            off += bas;
+            var max = limit - off;
+            if (dotgo.len(p) > max)
+            {
+                //p = new slice<byte>(p, 0, (int)max);
+                var readResult = reader.ReadAt(p, off);
+                var err = readResult.err;
+                if (readResult.err == error.Nil)
+                {
+                    err = io.EOF;
+                }
+                return new ReaderReadReturn() { n = readResult.n, err = err };
+            }
+            return reader.ReadAt(p, off);
         }
 
         public SeekerSeekReturn Seek(long offset, int whense)
@@ -40,20 +68,20 @@ namespace dotgo.io
                 default:
                     return new SeekerSeekReturn() { n = 0, err = errWhence };
                 case io.SeekStart:
-                    offset += this.offset;
+                    offset += this.bas;
                     break;
                 case io.SeekCurrent:
-                    offset += this.pos;
+                    offset += this.off;
                     break;
                 case io.SeekEnd:
-                    offset += this.offset + this.size;
+                    offset += this.limit;
                     break;
             }
-            if (offset < this.offset)
+            if (offset < this.bas)
             {
                 return new SeekerSeekReturn() { n = 0, err = errOffset };
             }
-            pos = offset;
+            off = offset;
             return retVal;
         }
 
@@ -62,7 +90,7 @@ namespace dotgo.io
         /// </summary>
         public long Size()
         {
-            return size;
+            return limit - bas;
         }
     }
 }

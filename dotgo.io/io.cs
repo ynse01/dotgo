@@ -60,8 +60,10 @@ namespace dotgo.io
 
         public struct ioCopyReturn
         {
-            long written;
-            error err;
+            public long written;
+            public error err;
+
+            public static ioCopyReturn Nil = new ioCopyReturn() { written = 0, err = error.Nil };
         }
 
         /// <summary>
