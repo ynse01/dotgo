@@ -1,0 +1,2 @@
+# dotgo
+Go compatibel libraries
