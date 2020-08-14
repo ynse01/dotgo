@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\dotgo.time\dotgo.time.csproj" />
     <ProjectReference Include="..\dotgo\dotgo.csproj" />
   </ItemGroup>
 
