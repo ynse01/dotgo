@@ -1,7 +1,7 @@
 ﻿
 namespace dotgo.io
 {
-    public class TeeReader : Reader
+    public struct TeeReader : Reader
     {
         private Reader r;
         private Writer w;
@@ -14,7 +14,16 @@ namespace dotgo.io
 
         public ReaderReadReturn Read(byte[] p)
         {
-            throw new System.NotImplementedException();
+            var readResult = r.Read(p);
+            if (readResult.n > 0)
+            {
+                var writeResult = w.Write(p);
+                if (writeResult.err != error.Nil)
+                {
+                    return new ReaderReadReturn() { n = readResult.n, err = writeResult.err };
+                }
+            }
+            return ReaderReadReturn.Nil;
         }
     }
 }

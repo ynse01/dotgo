@@ -1,7 +1,7 @@
 ﻿
 namespace dotgo.os
 {
-    public class File
+    public struct File
     {
     }
 }
