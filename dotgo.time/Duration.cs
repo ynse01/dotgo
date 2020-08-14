@@ -1,6 +1,5 @@
 ﻿
-using System.Data.Common;
-using System.Threading;
+using System;
 
 namespace dotgo
 {
@@ -45,6 +44,7 @@ namespace dotgo
 
         public Duration Round(Duration m)
         {
+            // TODO: Implement
             return this;
         }
 
@@ -55,6 +55,7 @@ namespace dotgo
 
         public Duration Truncate(Duration m)
         {
+            // TODO: Implement
             return this;
         }
 
@@ -75,6 +76,11 @@ namespace dotgo
 
         public static Duration operator /(int scalar, Duration d) {
             return new Duration(d.nano / scalar);
+        }
+
+        public static explicit operator TimeSpan(Duration d)
+        {
+            return new TimeSpan(d.MilliSeconds());
         }
     }
 }

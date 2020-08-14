@@ -5,33 +5,49 @@ using WeekdayType = dotgo.time.Weekday;
 
 namespace dotgo.time
 {
+    // TODO: Timezone implementation
     public struct Time
     {
         private static DateTime zero = new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private static DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        private DateTime utc;
+        private ptr<Location> loc;
+
+        internal Time(DateTime utc, ptr<Location> loc)
+        {
+            this.utc = utc;
+            this.loc = loc;
+        }
 
         public Time Add(Duration d)
         {
-            return new Time();
+            var u = utc.Add((TimeSpan)d);
+            return new Time(u, loc);
         }
 
         public Time AddDate(int years, int months, int days) 
         {
-            return new Time();
+            var u = utc.AddYears(years);
+            u = u.AddMonths(months);
+            u = u.AddDays(days);
+            return new Time(u, loc);
         }
 
         public bool After(Time u)
         {
-            return true;
+            return utc.CompareTo(u.utc) > 0;
         }
 
         public byte[] AppendFormat(byte[] b, string layout)
         {
+            // TODO: Implement
             return b;
         }
 
         public bool Before(Time u)
         {
-            return true;
+            return utc.CompareTo(u.utc) < 0;
         }
 
         public struct timeTimeClockReturn
@@ -43,7 +59,11 @@ namespace dotgo.time
 
         public timeTimeClockReturn Clock()
         {
-            return new timeTimeClockReturn();
+            var retVal = new timeTimeClockReturn();
+            retVal.hour = utc.Hour;
+            retVal.min = utc.Minute;
+            retVal.sec = utc.Second;
+            return retVal;
         }
 
         public struct timeTimeDateReturn
@@ -55,27 +75,34 @@ namespace dotgo.time
 
         public timeTimeDateReturn Date()
         {
-            return new timeTimeDateReturn();
+            var retVal = new timeTimeDateReturn();
+            retVal.year = utc.Year;
+            retVal.month = MonthType.FromDateTime(utc);
+            retVal.day = utc.Day;
+            return retVal;
         }
 
         public int Day()
         {
-            return 0;
+            return utc.Day;
         }
 
         public bool Equal(Time u)
         {
-            return false;
+            var tLoc = loc.Dereferenced;
+            var uLoc = u.loc.Dereferenced;
+            return tLoc.Equals(uLoc) && utc.Equals(u.utc);
         }
 
         public string Format(string layout)
         {
+            // TODO: Implement
             return layout;
         }
 
         public int Hour()
         {
-            return 0;
+            return utc.Hour;
         }
 
         public struct timeTimeISOWeekReturn
@@ -86,17 +113,21 @@ namespace dotgo.time
 
         public timeTimeISOWeekReturn ISOWeek()
         {
-            return new timeTimeISOWeekReturn();
+            var retVal = new timeTimeISOWeekReturn();
+            retVal.year = utc.Year;
+            // TODO: Calculate week number
+            retVal.week = 0;
+            return retVal;
         }
 
         public Time In(ptr<Location> loc)
         {
-            return this;
+            return new Time(utc, loc);
         }
 
         public bool IsZero()
         {
-            return true;
+            return utc.Equals(zero);
         }
 
         public Time Local()
@@ -106,17 +137,17 @@ namespace dotgo.time
 
         public ptr<Location> Location()
         {
-            return default(ptr<Location>);
+            return loc;
         }
 
         public int Minute()
         {
-            return 0;
+            return utc.Minute;
         }
 
         public MonthType Month()
         {
-            return MonthType.January;
+            return MonthType.FromDateTime(utc);
         }
 
         public int NanoSecond()
@@ -126,17 +157,18 @@ namespace dotgo.time
 
         public Time Round(Duration m)
         {
+            // TODO: Implement
             return this;
         }
 
         public int Second()
         {
-            return 0;
+            return utc.Second;
         }
 
         public string String()
         {
-            return ToString();
+            return utc.ToString();
         }
         public Duration Sub(Time t)
         {
@@ -145,42 +177,44 @@ namespace dotgo.time
 
         public Time Truncate(Duration d)
         {
+            // TODO: Implement
             return this;
         }
 
         public Time UTC()
         {
-            return this;
+            return new Time(utc, time.UTC);
         }
 
         public long Unix()
         {
-            return 0;
+            return utc.Ticks - epoch.Ticks;
         }
 
         public long UnixNano()
         {
-            return 0;
+            return Unix() * 1000L * 1000L;
         }
 
         public WeekdayType WeekDay()
         {
-            return WeekdayType.Monday;
+            return WeekdayType.FromDateTime(utc);
         }
 
         public int Year()
         {
-            return 0;
+            return utc.Year;
         }
 
         public int YearDay()
         {
-            return 0;
+            return utc.DayOfYear;
         }
 
         public Time Zone(string name, int offset)
         {
-            return this;
+            var loc = new ptr<Location>(new Location(name, offset));
+            return new Time(utc, loc);
         }
     }
 }

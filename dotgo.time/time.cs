@@ -17,6 +17,7 @@ namespace dotgo.time
         public static string RFC3339Nano = "2006-01-02T15:04:05.999999999Z07:00";
         public static string Kitchen = "3:04PM";
 
+        public static ptr<Location> UTC;
 
         public static string Stamp = "Jan _2 15:04:05";
         public static string StampMilli = "Jan _2 15:04:05.000";

@@ -10,9 +10,12 @@ namespace dotgo
             this.val = val;
         }
 
-        public T Dereference()
+        public T Dereferenced
         {
-            return val;
+            get
+            {
+                return val;
+            }
         }
     }
 }

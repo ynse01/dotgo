@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
+using System;
 
 namespace dotgo.time
 {
@@ -19,6 +18,16 @@ namespace dotgo.time
         public static Month November = new Month(11);
         public static Month December = new Month(12);
 
+        public static Month FromDateTime(DateTime dt)
+        {
+            return new Month(dt.Month);
+        }
+
+        private static readonly string[] strings = new[]
+        {
+            "January", "February", "March", "April", "May", "June", "July", "August", "September", "November", "December"
+        };
+
         private int m;
 
         private Month(int m)
@@ -28,7 +37,7 @@ namespace dotgo.time
 
         public string String()
         {
-            return ToString();
+            return strings[m - 1];
         }
     }
 }
