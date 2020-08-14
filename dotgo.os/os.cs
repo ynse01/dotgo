@@ -57,34 +57,5 @@ namespace dotgo.os
         {
             return (Process.Nil, error.Nil);
         }
-
-        public static int Run<T>(string[] args)
-        {
-            // Expose command line arguments
-            Args = new slice<string>(args, 0, args.Length);
-            // TODO: Connect standard in, out and error
-            // Find main entry method
-            var ass = typeof(T).Assembly;
-            foreach (Type t in ass.GetTypes())
-            {
-                if (t.GetCustomAttribute<MainModuleAttribute>() != null)
-                {
-                    // Found our main module type
-                    var mainMethod = t.GetMethod("main");
-                    if (mainMethod != null)
-                    {
-                        var retVal = mainMethod.Invoke(null, null);
-                        if (retVal == null)
-                        {
-                            return 0;
-                        }
-                        return (int)retVal;
-                    }
-                    break;
-                }
-            }
-            return -1;
-        }
-
     }
 }
