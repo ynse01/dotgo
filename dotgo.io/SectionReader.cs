@@ -9,80 +9,81 @@ namespace dotgo.io
         private static error errWhence = errors.New("Seek: invalid whence");
         private static error errOffset = errors.New("Seek: invalid offset");
 
-        private ReaderAt reader;
+        private ReaderAt r;
         private long bas;
         private long off;
         private long limit;
 
-        public SectionReader(ReaderAt r, long off, long n)
+        internal SectionReader(ReaderAt r, long off, long bas, long limit)
         {
-            reader = r;
+            this.r = r;
             this.off = off;
-            bas = off;
-            limit = off + n;
+            this.bas = off;
+            this.limit = limit;
         }
 
-        public ReaderReadReturn Read(byte[] p)
+        public (int n, error err) Read(byte[] p)
         {
-            if (off >= limit)
+            var s = this;
+            if (s.off >= s.limit)
             {
-                return new ReaderReadReturn() { n = 0, err = io.EOF };
+                return ( 0, io.EOF );
             }
-            var max = limit - off;
+            var max = s.limit - s.off;
             if (dotgo.len(p) > max)
             {
                 //p = new slice<byte>(p, 0, (int)max);
             }
-            var readResult = reader.ReadAt(p, off);
-            off += readResult.n;
-            return readResult;
+            (int n , error err) = s.r.ReadAt(p, off);
+            s.off += n;
+            return (n, err);
         }
 
-        public ReaderReadReturn ReadAt(byte[] p, long off)
+        public (int n, error err) ReadAt(byte[] p, long off)
         {
-            if (off < 0 || off >= limit - bas)
+            var s = this;
+            if (off < 0 || off >= s.limit - s.bas)
             {
-                return new ReaderReadReturn() { n = 0, err = io.EOF };
+                return (0, io.EOF);
             }
-            off += bas;
-            var max = limit - off;
+            off += s.bas;
+            var max = s.limit - off;
             if (dotgo.len(p) > max)
             {
                 //p = new slice<byte>(p, 0, (int)max);
-                var readResult = reader.ReadAt(p, off);
-                var err = readResult.err;
-                if (readResult.err == error.Nil)
+                (int n, error err) = s.r.ReadAt(p, off);
+                if (err == error.Nil)
                 {
                     err = io.EOF;
                 }
-                return new ReaderReadReturn() { n = readResult.n, err = err };
+                return (n, err);
             }
-            return reader.ReadAt(p, off);
+            return s.r.ReadAt(p, off);
         }
 
-        public SeekerSeekReturn Seek(long offset, int whense)
+        public (int n, error err) Seek(long offset, int whense)
         {
-            var retVal = SeekerSeekReturn.Nil;
+            var s = this;
             switch(whense)
             {
                 default:
-                    return new SeekerSeekReturn() { n = 0, err = errWhence };
+                    return (0, errWhence);
                 case io.SeekStart:
-                    offset += this.bas;
+                    offset += s.bas;
                     break;
                 case io.SeekCurrent:
-                    offset += this.off;
+                    offset += s.off;
                     break;
                 case io.SeekEnd:
-                    offset += this.limit;
+                    offset += s.limit;
                     break;
             }
-            if (offset < this.bas)
+            if (offset < s.bas)
             {
-                return new SeekerSeekReturn() { n = 0, err = errOffset };
+                return (0, errOffset);
             }
-            off = offset;
-            return retVal;
+            s.off = offset;
+            return ((int)(offset - s.bas), error.Nil);
         }
 
         /// <summary>
@@ -90,7 +91,8 @@ namespace dotgo.io
         /// </summary>
         public long Size()
         {
-            return limit - bas;
+            var s = this;
+            return s.limit - s.bas;
         }
     }
 }

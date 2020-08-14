@@ -19,6 +19,6 @@ namespace dotgo.io
     /// </summary>
     public interface ReaderAt
     {
-        ReaderReadReturn ReadAt(byte[] p, long offset);
+        (int n, error err) ReadAt(byte[] p, long offset);
     }
 }

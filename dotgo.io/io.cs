@@ -185,7 +185,7 @@ namespace dotgo.io
         /// </summary>
         public static SectionReader NewSectionReader(ReaderAt r, long off, long n)
         {
-            return new SectionReader(r, off, n);
+            return new SectionReader(r, off, off, off + n);
         }
 
         /// <summary>
