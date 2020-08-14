@@ -6,4 +6,8 @@
     <RootNamespace>dotgo.io</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\dotgo\dotgo.csproj" />
+  </ItemGroup>
+
 </Project>

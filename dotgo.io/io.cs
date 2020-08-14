@@ -1,7 +1,7 @@
 ﻿
 namespace dotgo.io
 {
-    public class io
+    public static class io
     {
         public static error EOF = errors.New("EOF");
 
