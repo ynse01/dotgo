@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace dotgo.io
 {
     public class io
@@ -50,6 +49,26 @@ namespace dotgo.io
         public static WriterWriteReturn WriteString(Writer w, string s)
         {
             return new WriterWriteReturn();
+        }
+
+        public static Reader LimitReader(Reader r, long n)
+        {
+            return new LimitedReader(r, n);
+        }
+
+        public static Reader MultiReader(params Reader[] readers)
+        {
+            return readers[0];
+        }
+
+        public static Reader TeeReader(Reader r, Writer w)
+        {
+            return new TeeReader(r, w);
+        }
+
+        public static SectionReader NewSectionReader(ReaderAt r, long off, long n)
+        {
+            return new SectionReader(r, off, n);
         }
     }
 }
