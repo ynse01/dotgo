@@ -24,7 +24,7 @@ namespace dotgo.io
             {
                 return (0, io.EOF );
             }
-            if (dotgo.len(p) > l.N)
+            if (this.len(p) > l.N)
             {
                 //p = new slice<byte>(p, 0, (int)N);
             }
