@@ -58,14 +58,6 @@ namespace dotgo.io
         /// </summary>
         public static error ErrUnexpectedEOF = errors.New("unexpected EOF");
 
-        public struct ioCopyReturn
-        {
-            public long written;
-            public error err;
-
-            public static ioCopyReturn Nil = new ioCopyReturn() { written = 0, err = error.Nil };
-        }
-
         /// <summary>
         /// Copy copies from src to dst until either EOF is reached on src or an error occurs.
         /// It returns the number of bytes copied and the first error encountered while copying, if any.
@@ -74,9 +66,9 @@ namespace dotgo.io
         /// If src implements the WriterTo interface, the copy is implemented by calling src.WriteTo(dst). 
         /// Otherwise, if dst implements the ReaderFrom interface, the copy is implemented by calling dst.ReadFrom(src). 
         /// </summary>
-        public static ioCopyReturn Copy(Writer dst, Reader src)
+        public static (long written, error err) Copy(Writer dst, Reader src)
         {
-            return new ioCopyReturn();
+            return (0, error.Nil);
         }
 
         /// <summary>
@@ -85,9 +77,9 @@ namespace dotgo.io
         /// CopyBuffer panics.
         /// If either src implements WriterTo or dst implements ReaderFrom, buf will not be used to perform the copy.
         /// </summary>
-        public static ioCopyReturn CopyBuffer(Writer dst, Reader src, byte[] buf)
+        public static (long written, error err) CopyBuffer(Writer dst, Reader src, byte[] buf)
         {
-            return new ioCopyReturn();
+            return (0, error.Nil);
         }
 
         /// <summary>
@@ -95,9 +87,9 @@ namespace dotgo.io
         /// the earliest error encountered while copying. On return, written == n if and only if err == nil.
         /// If dst implements the ReaderFrom interface, the copy is implemented using it. 
         /// </summary>
-        public static ioCopyReturn CopyN(Writer dst, Reader src, long n)
+        public static (long written, error err) CopyN(Writer dst, Reader src, long n)
         {
-            return new ioCopyReturn();
+            return (0, error.Nil);
         }
 
         /// <summary>

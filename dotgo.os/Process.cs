@@ -5,6 +5,8 @@ namespace dotgo.os
     {
         public int Pid;
 
+        public static Process Nil = new Process();
+
         public error Kill()
         {
             return default(error);
@@ -20,15 +22,9 @@ namespace dotgo.os
             return default(error);
         }
 
-        public struct WaitReturn
+        public (ProcessState state, error err) Wait()
         {
-            public ProcessState state;
-            public error err;
-        }
-
-        public WaitReturn Wait()
-        {
-            return new WaitReturn();
+            return (ProcessState.Nil, error.Nil);
         }
     }
 }

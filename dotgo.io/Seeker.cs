@@ -1,14 +1,6 @@
 ﻿
 namespace dotgo.io
 {
-    public struct SeekerSeekReturn
-    {
-        public long n;
-        public error err;
-
-        public static SeekerSeekReturn Nil = new SeekerSeekReturn() { n = 0, err = error.Nil };
-    }
-
     /// <summary>
     ///  Seeker is the interface that wraps the basic Seek method.
     ///  Seek sets the offset for the next Read or Write to offset, interpreted according to whence:
@@ -19,6 +11,6 @@ namespace dotgo.io
     /// </summary>
     public interface Seeker
     {
-        SeekerSeekReturn Seek(long offset, int whence);
+        (long n, error err) Seek(long offset, int whence);
     }
 }

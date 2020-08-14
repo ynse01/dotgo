@@ -1,6 +1,8 @@
 ﻿
 using IO = System.IO;
 using System.Runtime.InteropServices;
+using System;
+using System.Reflection;
 
 namespace dotgo.os
 {
@@ -46,20 +48,30 @@ namespace dotgo.os
             return default(error);
         }
 
-        public struct osProcessReturn
+        public static (Process p, error err) FindProcess(int pid)
         {
-            public Process p;
-            error err;
+            return (Process.Nil, error.Nil);
         }
 
-        public static osProcessReturn FindProcess(int pid)
+        public static (Process p, error err) StartProcess(string name, string[] argv, ProcAttr attr)
         {
-            return new osProcessReturn();
+            return (Process.Nil, error.Nil);
         }
 
-        public static osProcessReturn StartProcess(string name, string[] argv, ProcAttr attr)
+        public static int Run<T>(string[] args)
         {
-            return new osProcessReturn();
+            Args = new slice<string>(args, 0, args.Length);
+            var ass = typeof(T).Assembly;
+            foreach (Type t in ass.GetTypes())
+            {
+                if (t.GetCustomAttribute<MainModuleAttribute>() != null)
+                {
+                    // Found our main module type
+                    break;
+                }
+            }
+            return 0;
         }
+
     }
 }

@@ -5,6 +5,8 @@ namespace dotgo.os
     {
         private int pid;
 
+        public static ProcessState Nil = new ProcessState();
+
         internal ProcessState(int pid)
         {
             this.pid = pid;

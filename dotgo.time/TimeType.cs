@@ -50,20 +50,12 @@ namespace dotgo.time
             return utc.CompareTo(u.utc) < 0;
         }
 
-        public struct timeTimeClockReturn
+        public (int hour, int min, int sec) Clock()
         {
-            public int hour;
-            public int min;
-            public int sec;
-        }
-
-        public timeTimeClockReturn Clock()
-        {
-            var retVal = new timeTimeClockReturn();
-            retVal.hour = utc.Hour;
-            retVal.min = utc.Minute;
-            retVal.sec = utc.Second;
-            return retVal;
+            var hour = utc.Hour;
+            var min = utc.Minute;
+            var sec = utc.Second;
+            return (hour, min, sec);
         }
 
         public struct timeTimeDateReturn
@@ -73,13 +65,12 @@ namespace dotgo.time
             public int day;
         }
 
-        public timeTimeDateReturn Date()
+        public (int year, MonthType month, int day) Date()
         {
-            var retVal = new timeTimeDateReturn();
-            retVal.year = utc.Year;
-            retVal.month = MonthType.FromDateTime(utc);
-            retVal.day = utc.Day;
-            return retVal;
+            var year = utc.Year;
+            var month = MonthType.FromDateTime(utc);
+            var day = utc.Day;
+            return (year, month, day);
         }
 
         public int Day()
@@ -105,19 +96,12 @@ namespace dotgo.time
             return utc.Hour;
         }
 
-        public struct timeTimeISOWeekReturn
+        public (int year, int week) ISOWeek()
         {
-            public int year;
-            public int week;
-        }
-
-        public timeTimeISOWeekReturn ISOWeek()
-        {
-            var retVal = new timeTimeISOWeekReturn();
-            retVal.year = utc.Year;
+            var year = utc.Year;
             // TODO: Calculate week number
-            retVal.week = 0;
-            return retVal;
+            var week = 0;
+            return (year, week);
         }
 
         public Time In(ptr<Location> loc)

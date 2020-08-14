@@ -46,15 +46,9 @@ namespace dotgo.time
             return default(chan<Time>);
         }
 
-        public struct timeParseDurationReturn
+        public static (Duration d, error err) ParseDuration(string s)
         {
-            public Duration d;
-            public error err;
-        }
-
-        public static timeParseDurationReturn ParseDuration(string s)
-        {
-            return new timeParseDurationReturn();
+            return (new Duration(0), error.Nil);
         }
 
         public static Duration Since(Time t)
@@ -67,25 +61,19 @@ namespace dotgo.time
             return t.Sub(Now());
         }
 
-        public struct timeLocationReturn
+        public static (ptr<Location> loc, error err) FixedZone(string name, int offset)
         {
-            public ptr<Location> loc;
-            public error err;
+            return (ptr<Location>.Nil, error.Nil);
         }
 
-        public static timeLocationReturn FixedZone(string name, int offset)
+        public static (ptr<Location> loc, error err) LoadLocation(string name)
         {
-            return new timeLocationReturn();
+            return (ptr<Location>.Nil, error.Nil);
         }
 
-        public static timeLocationReturn LoadLocation(string name)
+        public static (ptr<Location> loc, error err) LoadLocationFromTZData(string name, byte[] data)
         {
-            return new timeLocationReturn();
-        }
-
-        public static timeLocationReturn LoadLocationFromTZData(string name, byte[] data)
-        {
-            return new timeLocationReturn();
+            return (ptr<Location>.Nil, error.Nil);
         }
 
         public static Time Date(int year, Month month, int day, int hour, int min, int sec, int nsec, ptr<Location> loc)
@@ -98,20 +86,14 @@ namespace dotgo.time
             return new Time();
         }
 
-        public struct timeParseReturn
+        public static (Time time, error err) Parse(string format, string value)
         {
-            public Time time;
-            public error err;
+            return (new Time(), error.Nil);
         }
 
-        public static timeParseReturn Parse(string format, string value)
+        public static (Time time, error err) ParseInLocation(string format, string value, ptr<Location> loc)
         {
-            return new timeParseReturn();
-        }
-
-        public static timeParseReturn ParseInLocation(string format, string value, ptr<Location> loc)
-        {
-            return new timeParseReturn();
+            return (new Time(), error.Nil);
         }
 
         public static Time Unix(long sec, long nsec)
