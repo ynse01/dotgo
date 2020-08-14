@@ -7,6 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotgo.io", "dotgo.io\dotgo.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotgo", "dotgo\dotgo.csproj", "{77946B1A-4C59-4169-BBB9-506F4DBC2FA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotgo.os", "dotgo.os\dotgo.os.csproj", "{F17356CA-5D14-4AD3-A8FB-4F1672297E92}"
+	ProjectSection(ProjectDependencies) = postProject
+		{77946B1A-4C59-4169-BBB9-506F4DBC2FA5} = {77946B1A-4C59-4169-BBB9-506F4DBC2FA5}
+		{49A3A580-0240-47D7-9B27-E223F5CE5417} = {49A3A580-0240-47D7-9B27-E223F5CE5417}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +27,10 @@ Global
 		{77946B1A-4C59-4169-BBB9-506F4DBC2FA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77946B1A-4C59-4169-BBB9-506F4DBC2FA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77946B1A-4C59-4169-BBB9-506F4DBC2FA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F17356CA-5D14-4AD3-A8FB-4F1672297E92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F17356CA-5D14-4AD3-A8FB-4F1672297E92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F17356CA-5D14-4AD3-A8FB-4F1672297E92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F17356CA-5D14-4AD3-A8FB-4F1672297E92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
