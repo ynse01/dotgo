@@ -30,7 +30,7 @@ namespace dotgo.io
                 return ( 0, io.EOF );
             }
             var max = s.limit - s.off;
-            if (this.len(p) > max)
+            if (globals.len(p) > max)
             {
                 //p = new slice<byte>(p, 0, (int)max);
             }
@@ -48,7 +48,7 @@ namespace dotgo.io
             }
             off += s.bas;
             var max = s.limit - off;
-            if (this.len(p) > max)
+            if (globals.len(p) > max)
             {
                 //p = new slice<byte>(p, 0, (int)max);
                 (int n, error err) = s.r.ReadAt(p, off);
