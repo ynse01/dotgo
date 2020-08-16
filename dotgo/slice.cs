@@ -23,6 +23,11 @@ namespace dotgo
             }
         }
 
+        public slice<T> piece(int low)
+        {
+            return new slice<T>(segment.Array, segment.Offset + low, segment.Offset + segment.Count);
+        }
+
         public slice<T> piece(int low, int high)
         {
             return new slice<T>(segment.Array, segment.Offset + low, segment.Offset + high);

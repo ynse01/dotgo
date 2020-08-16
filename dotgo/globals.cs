@@ -80,7 +80,7 @@ namespace dotgo
             return null;
         }
 
-        public static void panic()
+        public static void panic(string message)
         {
             //TODO: Implement
         }

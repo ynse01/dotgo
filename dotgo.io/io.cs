@@ -1,5 +1,6 @@
 ﻿
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace dotgo.io
 {
@@ -16,7 +17,7 @@ namespace dotgo.io
         /// seek relative to the origin of the file
         /// </summary>
         public const int SeekStart = 0;
-        
+
         /// <summary>
         /// seek relative to the current offset
         /// </summary>
@@ -70,7 +71,7 @@ namespace dotgo.io
         /// </summary>
         public static (long written, error err) Copy(Writer dst, Reader src)
         {
-            return (0, error.Nil);
+            return copyBuffer(dst, src, null);
         }
 
         /// <summary>
@@ -79,7 +80,14 @@ namespace dotgo.io
         /// CopyBuffer panics.
         /// If either src implements WriterTo or dst implements ReaderFrom, buf will not be used to perform the copy.
         /// </summary>
-        public static (long written, error err) CopyBuffer(Writer dst, Reader src, slice<byte> buf)
+        public static (long written, error err) CopyBuffer(Writer dst, Reader src, slice<byte> buf) {
+            if (buf != null && globals.len(buf) == 0) {
+                globals.panic("empty buffer in io.CopyBuffer");
+            }
+            return copyBuffer(dst, src, buf);
+        }
+        
+        public static (long written, error err) copyBuffer(Writer dst, Reader src, slice<byte> buf)
         {
             // If the reader has a WriteTo method, use it to do the copy.
 	        // Avoids an allocation and a copy.
@@ -100,7 +108,7 @@ namespace dotgo.io
                         size = l.N;
 			        }
 		        }
-		        //buf = globals.make<byte>((int)size);
+		        buf = globals.make<slice<byte>>((int)size);
 	        }
             long written = 0L;
             error err;
@@ -137,7 +145,15 @@ namespace dotgo.io
         /// </summary>
         public static (long written, error err) CopyN(Writer dst, Reader src, long n)
         {
-            return (0, error.Nil);
+            (long written, error err) = Copy(dst, LimitReader(src, n));
+            if (written == n) {
+                return (n, error.Nil);
+            }
+            if (written < n && err == error.Nil) {
+                // src stopped early; must have been EOF.
+                err = EOF;
+            }
+            return (written, err);
         }
 
         /// <summary>
@@ -163,9 +179,27 @@ namespace dotgo.io
         /// ReadAtLeast returns ErrShortBuffer. On return, n >= min if and only if err == nil.
         /// If r returns an error having read at least min bytes, the error is dropped. 
         /// </summary>
-        public static (int n, error err) ReadAtLeast(Reader r, byte[] buf, int min)
+        public static (int n, error err) ReadAtLeast(Reader r, slice<byte> buf, int min)
         {
-            return (0, error.Nil);
+            int n = 0;
+            error err = error.Nil;
+            if (globals.len(buf) < min)
+            {
+                while ((n < min) && (err == error.Nil))
+                {
+                    (int nn, error er) = r.Read(buf.piece(n));
+                    err = er;
+                    n += nn;
+                }
+                if (n >= min)
+                {
+                    err = error.Nil;
+                } else if (n > 0 && err == io.EOF)
+                {
+                    err = ErrUnexpectedEOF;
+                }
+            }
+            return (n, err);
         }
 
         /// <summary>
@@ -175,9 +209,9 @@ namespace dotgo.io
         /// On return, n == len(buf) if and only if err == nil. If r returns an error having read at least
         /// len(buf) bytes, the error is dropped. 
         /// </summary>
-        public static (int n, error err) ReadFull(Reader r, byte[] buf)
+        public static (int n, error err) ReadFull(Reader r, slice<byte> buf)
         {
-            return (0, error.Nil);
+            return ReadAtLeast(r, buf, globals.len(buf));
         }
 
         /// <summary>
@@ -187,7 +221,13 @@ namespace dotgo.io
         /// </summary>
         public static (int n, error err) WriteString(Writer w, string s)
         {
-            return (0, error.Nil);
+            if (w is StringWriter)
+            {
+                return ((StringWriter)w).WriteString(s);
+            }
+            var b = Encoding.UTF8.GetBytes(s);
+            var l = new slice<byte>(b, 0, b.Length);
+            return w.Write(l);
         }
 
         /// <summary>
