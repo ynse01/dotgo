@@ -19,6 +19,6 @@ namespace dotgo.io
     /// </summary>
     public interface Reader
     {
-        (int n, error err) Read(byte[] p);
+        (int n, error err) Read(slice<byte> p);
     }
 }

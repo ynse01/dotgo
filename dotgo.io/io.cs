@@ -1,4 +1,6 @@
 ﻿
+using System.Runtime.CompilerServices;
+
 namespace dotgo.io
 {
     /// <summary>
@@ -77,9 +79,55 @@ namespace dotgo.io
         /// CopyBuffer panics.
         /// If either src implements WriterTo or dst implements ReaderFrom, buf will not be used to perform the copy.
         /// </summary>
-        public static (long written, error err) CopyBuffer(Writer dst, Reader src, byte[] buf)
+        public static (long written, error err) CopyBuffer(Writer dst, Reader src, slice<byte> buf)
         {
-            return (0, error.Nil);
+            // If the reader has a WriteTo method, use it to do the copy.
+	        // Avoids an allocation and a copy.
+	        if (src is WriterTo) {
+                return ((WriterTo)src).WriteTo(dst);
+            }
+            // Similarly, if the writer has a ReadFrom method, use it to do the copy.
+            if (dst is ReaderFrom) {
+                return ((ReaderFrom)dst).ReadFrom(src);
+	        }
+	        if (buf == null) {
+                var size = 32L * 1024;
+                if ((src is LimitedReader) && (size > ((LimitedReader)src).N)) {
+                    var l = (LimitedReader)src;
+                    if (l.N < 1) {
+                        size = 1;
+			        } else {
+                        size = l.N;
+			        }
+		        }
+		        //buf = globals.make<byte>((int)size);
+	        }
+            long written = 0L;
+            error err;
+	        while(true) {
+                (int nr, error er) = src.Read(buf);
+		        if (nr > 0) {
+			        (int nw, error ew) = dst.Write(buf.piece(0,nr));
+			        if (nw > 0) {
+                        written += nw;
+			        }
+			        if (ew != error.Nil) {
+                        err = ew;
+                        break;
+			        }
+			        if (nr != nw) {
+                        err = ErrShortWrite;
+                        break;
+			        }
+		        }
+		        if (er != error.Nil) {
+			        if (er != EOF) {
+                        err = er;
+			        }
+                    break;
+		        }
+        	}
+	        return (written, err);
         }
 
         /// <summary>

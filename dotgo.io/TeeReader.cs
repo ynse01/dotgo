@@ -12,7 +12,7 @@ namespace dotgo.io
             this.w = w;
         }
 
-        public (int n, error err) Read(byte[] p)
+        public (int n, error err) Read(slice<byte> p)
         {
             (int n, error err) = r.Read(p);
             if (n > 0)

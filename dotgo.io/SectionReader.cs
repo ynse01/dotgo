@@ -4,7 +4,7 @@ namespace dotgo.io
     /// <summary>
     /// SectionReader implements Read, Seek, and ReadAt on a section of an underlying ReaderAt. 
     /// </summary>
-    public struct SectionReader
+    public struct SectionReader : Reader
     {
         private static error errWhence = errors.New("Seek: invalid whence");
         private static error errOffset = errors.New("Seek: invalid offset");
@@ -22,7 +22,7 @@ namespace dotgo.io
             this.limit = limit;
         }
 
-        public (int n, error err) Read(byte[] p)
+        public (int n, error err) Read(slice<byte> p)
         {
             var s = this;
             if (s.off >= s.limit)
@@ -32,14 +32,14 @@ namespace dotgo.io
             var max = s.limit - s.off;
             if (globals.len(p) > max)
             {
-                //p = new slice<byte>(p, 0, (int)max);
+                p = p.piece(0, (int)max);
             }
             (int n , error err) = s.r.ReadAt(p, off);
             s.off += n;
             return (n, err);
         }
 
-        public (int n, error err) ReadAt(byte[] p, long off)
+        public (int n, error err) ReadAt(slice<byte> p, long off)
         {
             var s = this;
             if (off < 0 || off >= s.limit - s.bas)
@@ -50,7 +50,7 @@ namespace dotgo.io
             var max = s.limit - off;
             if (globals.len(p) > max)
             {
-                //p = new slice<byte>(p, 0, (int)max);
+                p = p.piece(0, (int)max);
                 (int n, error err) = s.r.ReadAt(p, off);
                 if (err == error.Nil)
                 {

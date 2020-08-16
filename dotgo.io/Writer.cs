@@ -10,6 +10,6 @@ namespace dotgo.io
     /// </summary>
     public interface Writer
     {
-        (int n, error err) Write(byte[] p);
+        (int n, error err) Write(slice<byte> p);
     }
 }

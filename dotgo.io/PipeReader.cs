@@ -11,7 +11,7 @@ namespace dotgo.io
         /// or the write end is closed.
         /// If the write end is closed with an error, that error is returned as err; otherwise err is EOF. 
         /// </summary>
-        public (int n, error err) Read(byte[] p)
+        public (int n, error err) Read(slice<byte> p)
         {
             return (0, error.Nil);
         }

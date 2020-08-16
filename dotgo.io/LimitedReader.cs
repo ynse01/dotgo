@@ -17,7 +17,7 @@ namespace dotgo.io
             N = n;
         }
 
-        public (int n, error err) Read(byte[] p)
+        public (int n, error err) Read(slice<byte> p)
         {
             var l = this;
             if (l.N <= 0)
@@ -26,7 +26,7 @@ namespace dotgo.io
             }
             if (globals.len(p) > l.N)
             {
-                //p = new slice<byte>(p, 0, (int)N);
+                p = p.piece(0, (int)N);
             }
             (int n, error err) = l.R.Read(p);
             N = n;
